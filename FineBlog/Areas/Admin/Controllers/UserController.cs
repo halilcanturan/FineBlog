@@ -30,7 +30,11 @@ namespace FineBlog.Areas.Admin.Controllers
         [HttpGet("Login")]
         public IActionResult Login()
         {
-            return View(new LoginVM());
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View(new LoginVM());
+            }
+            return RedirectToAction("Index", "User", new {area = "Admin"});
         }
 
         [HttpPost("Login")]
@@ -50,8 +54,16 @@ namespace FineBlog.Areas.Admin.Controllers
                 return View(vm);
             }
             await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberMe, true);
-            _notification.Error("Login Succesful");
+            _notification.Success("Login Succesful");
             return RedirectToAction("Index", "User", new {area="Admin"});
+        }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            _signInManager.SignOutAsync();
+            _notification.Success("You are logged out succesfully");
+            return RedirectToAction("Index","Home", new {area=""});
         }
     }
 }
