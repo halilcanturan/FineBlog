@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model FineBlog.Models.ApplicationUser
 @inject UserManager<ApplicationUser> _userManager;
 @{
     var loggedInUser = new ApplicationUser();
@@ -27,6 +26,8 @@
 
     <!-- Custom styles for this template-->
     <link href="~/dashboard/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" rel="stylesheet">
+    
 
 </head>
 
@@ -51,16 +52,19 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" asp-action="Index" asp-controller="Post" asp-area="Admin">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Post</span>
                 </a>
             </li>
 
             <hr class="sidebar-divider my-0">
+
+            @if(User.IsInRole("Admin"))
+            {
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" asp-action="Index" asp-controller="User" asp-area="Admin">
                     <i class="fas fa-fw fa-user"></i>
                     <span>User</span>
                 </a>
@@ -83,6 +87,10 @@
                     </div>
                 </div>
             </li>
+            
+            }
+
+            
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -211,6 +219,13 @@
     <!-- Page level custom scripts -->
     <script src="~/dashboard/js/demo/chart-area-demo.js"></script>
     <script src="~/dashboard/js/demo/chart-pie-demo.js"></script>
+    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
 </body>
